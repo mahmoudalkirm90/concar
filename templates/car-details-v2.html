@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>{% load static %}
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تفاصيل السيارة — CarCon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Tajawal:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/car-detail.css' %}">
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loading-logo">Car<span style="color:var(--white)">Con</span></div>
+  <div class="loading-bar"></div>
+</div>
+
+<!-- ERROR -->
+<div id="error-screen" style="display:none; position:fixed; inset:0; background:var(--black); align-items:center; justify-content:center; flex-direction:column; gap:1rem; z-index:700;">
+  <div style="font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--gold)">السيارة غير موجودة</div>
+  <div style="color:var(--gray); font-size:.85rem">تعذّر تحميل بيانات السيارة</div>
+  <a href="/index.html" style="margin-top:1rem; background:var(--gold); color:var(--black); padding:.85rem 2.2rem; text-decoration:none; font-size:.72rem; letter-spacing:.25em; text-transform:uppercase;">العودة للرئيسية</a>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a href="/index.html" class="logo">
+    <div class="image">
+      <img src="/media/logo.png" alt="">
+    </div>
+  </a>
+  <button class="back-btn" onclick="history.back()">
+    <span class="back-icon">→</span>
+    رجوع
+  </button>
+</header>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<!-- MAIN -->
+<main id="main-content" style="display:none; padding-top:4.5rem;">
+
+  <!-- HERO -->
+  <section class="mag-hero" id="mag-hero">
+    <div class="mag-hero-no-img" id="hero-placeholder">🚗</div>
+
+    <div class="mag-hero-content">
+      <div class="mag-issue" id="hero-eyebrow">سيارة فاخرة</div>
+      <div class="mag-car-name" id="hero-name">— —</div>
+      <div class="mag-car-year" id="hero-year"></div>
+      <div class="mag-meta-row">
+        <div class="mag-meta-item">
+          <div class="mag-meta-label">الوقود</div>
+          <div class="mag-meta-value" id="m-fuel">—</div>
+        </div>
+        <div class="mag-meta-sep"></div>
+        <div class="mag-meta-item">
+          <div class="mag-meta-label">ناقل الحركة</div>
+          <div class="mag-meta-value" id="m-gear">—</div>
+        </div>
+        <div class="mag-meta-sep"></div>
+        <div class="mag-meta-item">
+          <div class="mag-meta-label">الحالة</div>
+          <div class="mag-meta-value" id="m-status">—</div>
+        </div>
+        <div class="mag-meta-sep"></div>
+        <div id="m-availability"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICE BAND -->
+  <div class="price-band">
+    <div>
+      <div class="price-band-label">السعر</div>
+      <div class="price-band-value" id="pb-price">—</div>
+      <div class="price-band-original" id="pb-original" style="display:none"></div>
+    </div>
+    <div class="price-band-btns">
+      <button class="btn-dark" onclick="sendWhatsapp()">💬 استفسار واتساب</button>
+      <button class="btn-outline-dark" onclick="window.print()">طباعة</button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="mag-body">
+
+    <!-- MAIN COLUMN -->
+    <div class="mag-main">
+
+      <!-- Specs -->
+      <div class="mag-specs-block">
+        <div class="mag-section-label">المواصفات التقنية</div>
+        <div class="mag-specs-table" id="specs-table"></div>
+      </div>
+
+      <!-- Description -->
+      <div class="mag-desc-block" id="desc-block" style="display:none">
+        <div class="mag-section-label">عن السيارة</div>
+        <p class="mag-desc-text" id="desc-text"></p>
+      </div>
+
+      <!-- Features -->
+      <div class="mag-features-block" id="features-block" style="display:none">
+        <div class="mag-section-label">المميزات</div>
+        <div class="mag-features-grid" id="features-grid"></div>
+      </div>
+
+      <!-- Gallery -->
+      <div class="mag-gallery-block" id="gallery-block" style="display:none">
+        <div class="mag-section-label">معرض الصور</div>
+        <div class="mag-gallery" id="gallery-grid"></div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="mag-sidebar">
+      <div class="sidebar-title">ملخص السيارة</div>
+      <div id="sidebar-specs"></div>
+
+      <div class="sidebar-note" id="sidebar-notes" style="display:none">
+        <div class="sidebar-title">ملاحظات</div>
+        <div id="notes-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+const API_BASE     = 'http://127.0.0.1:8000/api/cars';
+const WHATSAPP_NUM = '963931454382';
+
+const $ = id => document.getElementById(id);
+const formatPrice = v => v ? Number(v).toLocaleString('ar-SA') + '$ ' : '—';
+
+function showMain()  { $('loading-screen').style.display='none'; $('main-content').style.display='block'; }
+function showError() { $('loading-screen').style.display='none'; $('error-screen').style.display='flex'; }
+
+function openLightbox(src) {
+  $('lightbox-img').src=src;
+  $('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox() {
+  $('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
+
+let _carTitle = '';
+function sendWhatsapp() {
+  const text = `مرحباً، أريد الاستفسار عن: ${_carTitle}`;
+  window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function renderCar(car) {
+  _carTitle = `${car.brand} ${car.model} ${car.model_year}`;
+  document.title = `${_carTitle} — CarCon`;
+
+  if (car.cover_image) {
+    $('hero-placeholder').style.display = 'none';
+    const img = document.createElement('img');
+    img.src = car.cover_image;
+    img.className = 'mag-hero-img';
+    img.alt = _carTitle;
+    $('mag-hero').prepend(img);
+  }
+
+  $('hero-eyebrow').textContent = `${car.brand} — ${car.model_year}`;
+  $('hero-name').innerHTML = `${car.brand} <em>${car.model}</em>`;
+  $('hero-year').textContent = [car.trim, car.model_year].filter(Boolean).join(' • ');
+  $('m-fuel').textContent  = car.fuel    || '—';
+  $('m-gear').textContent  = car.gearbox || '—';
+  $('m-status').textContent = car.status === 'new' ? 'جديد' : 'مستعمل';
+  $('m-availability').innerHTML = `
+    <span class="mag-status ${car.is_available ? 'available':'sold'}">
+      ${car.is_available ? 'متاح' : 'مباع'}
+    </span>`;
+
+  $('pb-price').textContent = formatPrice(car.price);
+  if (car.has_discount && car.original_price) {
+    $('pb-original').style.display = 'block';
+    $('pb-original').textContent   = formatPrice(car.original_price);
+  }
+
+  const specs = [
+    ['الماركة',        car.brand],
+    ['الموديل',        car.model],
+    ['سنة الصنع',      car.model_year],
+    ['الفئة',          car.trim],
+    ['اللون',          car.color],
+    ['نوع الهيكل',     car.body],
+    ['نوع الدفع',      car.drive],
+    ['الوقود',         car.fuel],
+    ['ناقل الحركة',    car.gearbox],
+    ['حجم المحرك',     car.engine_size ? car.engine_size+'L' : null],
+    ['القوة',          car.horsepower  ? car.horsepower+' حصان' : null],
+    ['الأسطوانات',     car.cylinders   ? car.cylinders+' أسطوانة' : null],
+    ['المقاعد',        car.seats       ? car.seats+' مقاعد' : null],
+    ['التواجد' ,       car.address]
+  ].filter(([,v]) => v);
+
+  $('specs-table').innerHTML = specs.map(([k,v]) => `
+    <div class="mag-spec-row">
+      <div class="mag-spec-key">${k}</div>
+      <div class="mag-spec-val">${v}</div>
+    </div>
+  `).join('');
+
+  $('sidebar-specs').innerHTML = specs.map(([k,v]) => `
+    <div class="sidebar-item">
+      <span class="sidebar-key">${k}</span>
+      <span class="sidebar-val">${v}</span>
+    </div>
+  `).join('');
+
+  if (car.description) {
+    $('desc-block').style.display = '';
+    $('desc-text').textContent    = car.description;
+  }
+
+  if (car.features?.length) {
+    $('features-block').style.display = '';
+    $('features-grid').innerHTML = car.features.map(f => `
+      <div class="mag-feature-item">${f.name ?? f}</div>
+    `).join('');
+  }
+
+  if (car.images?.length) {
+    $('gallery-block').style.display = '';
+    $('gallery-grid').innerHTML = car.images.map(img => `
+      <div class="mag-gallery-item" onclick="openLightbox('${img.image}')">
+        <img src="${img.image}" alt="صورة" loading="lazy"/>
+      </div>
+    `).join('');
+  }
+
+  if (car.notes?.length) {
+    $('sidebar-notes').style.display = '';
+    $('notes-list').innerHTML = car.notes.map(n => `
+      <div class="note-item">
+        <div class="note-date-s">${n.created_at ? new Date(n.created_at).toLocaleDateString('ar-SA') : ''}</div>
+        <div class="note-text-s">${n.content}</div>
+      </div>
+    `).join('');
+  }
+
+  showMain();
+}
+
+async function loadCar() {
+  const id = window.location.pathname.split('/').filter(Boolean).pop();
+  if (!id) { showError(); return; }
+  try {
+    const res = await fetch(`${API_BASE}/${id}`);
+    if (!res.ok) throw new Error();
+    renderCar(await res.json());
+  } catch {
+    showError();
+  }
+}
+
+loadCar();
+</script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CarCon — سيارات فاخرة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Tajawal:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="static/css/index.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <a href="#" class="logo">
+    <div class="image">
+      <img src="../media/logo.png" alt="">
+    </div>
+  </a>
+  <nav id="nav">
+    <a href="#">الرئيسية</a>
+    <a href="#section-available">المتاح</a>
+    <a href="#section-sold">المباع</a>
+    <a href="#contact">تواصل معنا</a>
+    <a href="#inquery " class="nav-cta">إرسال استفسار</a>
+  </nav>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-links">
+    <a class="menu-link" href="#"><span>الرئيسية</span><span class="arrow">←</span></a>
+    <a class="menu-link" href="#section-available"><span>المتاح</span><span class="arrow">←</span></a>
+    <a class="menu-link" href="#section-sold"><span>المباع</span><span class="arrow">←</span></a>
+    <a class="menu-link" href="#contact"><span>تواصل معنا</span><span class="arrow">←</span></a>
+    <a class="menu-link" href="#inquery"><span>إرسال استفسار</span><span class="arrow">←</span></a>
+  </div>
+  <div class="menu-footer">
+    <div class="menu-footer-label">هل أنت مستعد للعثور على سيارتك؟</div>
+    <button class="menu-footer-btn" href="#section-available">تصفح السيارات</button>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">وكالة سيارات فاخرة</div>
+    <h1>أرقى <em>السيارات</em><br/>في مكان واحد</h1>
+    <p>
+      نقدم لك تجربة تسوق استثنائية لأفضل السيارات الفاخرة،
+      مع ضمان الجودة والخدمة المتميزة لكل عميل.
+    </p>
+    <div class="hero-btns">
+      <a href="#section-available" class="btn-primary">تصفح السيارات</a>
+      <a href="#contact" class="btn-secondary">تواصل معنا</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="media/hero.png" alt="سيارة فاخرة" />
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">١٥+</div>
+    <div class="stat-label">سنة خبرة</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">٥٠٠+</div>
+    <div class="stat-label">عميل راضٍ</div>
+  </div>
+  <div class="stat-item no-border">
+    <div class="stat-num">٣٠+</div>
+    <div class="stat-label">ماركة عالمية</div>
+  </div>
+</div>
+
+<!-- ══ CATALOG ══ -->
+<section id="catalog">
+
+
+
+  <!-- FILTERS -->
+  <div class="filters-bar">
+    <div class="filter-group search-group">
+      <input id="search-input" class="filter-input" type="text" placeholder="ابحث عن سيارة..."/>
+    </div>
+    <div class="filter-group">
+      <select id="filter-brand" class="filter-select">
+        <option value="">كل الماركات</option>
+      </select>
+    </div>
+    <div class="filter-group price-group">
+      <input id="filter-min-price" class="filter-input" type="number" placeholder="السعر من" min="0"/>
+      <span class="range-sep">—</span>
+      <input id="filter-max-price" class="filter-input" type="number" placeholder="إلى" min="0"/>
+    </div>
+    <div class="filter-group year-group">
+      <input id="filter-min-year" class="filter-input" type="number" placeholder="سنة من" min="2000" max="2025"/>
+      <span class="range-sep">—</span>
+      <input id="filter-max-year" class="filter-input" type="number" placeholder="إلى" min="2000" max="2025"/>
+    </div>
+    <div class="filter-group">
+      <select id="filter-fuel" class="filter-select">
+        <option value="">نوع الوقود</option>
+
+      </select>
+    </div>
+    <div class="filter-group">
+      <select id="filter-transmission" class="filter-select">
+        <option value="">ناقل الحركة</option>
+        <option value="automatic">أوتوماتيك</option>
+        <option value="manual">يدوي</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <select id="filter-sort" class="filter-select">
+  <option value="-created_at">الأحدث أولاً</option>
+  <option value="price">السعر: الأقل أولاً</option>
+  <option value="-price">السعر: الأعلى أولاً</option>
+</select>
+    </div>
+    <button id="btn-reset" class="btn-reset">✕ مسح</button>
+  </div>
+
+  <!-- ══ SECTION: AVAILABLE ══ -->
+  <div id="section-available">
+    <div class="section-title-wrap">
+      <h2 class="section-title">متاح الآن</h2>
+      <p class="section-sub">
+        سيارات مختارة بعناية جاهزة لأصحابها الجدد.
+        <span id="count-available" style="color:var(--gold);margin-right:0.5rem;"></span>
+      </p>
+    </div>
+    <div class="cars-grid" id="cars-grid-available"></div>
+    <div class="pagination" id="pagination-available"></div>
+  </div>
+
+  <!-- ── فاصل ── -->
+  <div class="section-divider">
+    <span>السيارات المباعة</span>
+  </div>
+
+  <!-- ══ SECTION: SOLD ══ -->
+  <div id="section-sold">
+    <div class="section-title-wrap">
+      <h2 class="section-title">مباعة</h2>
+      <p class="section-sub">
+        سيارات تم بيعها — للاستفسار عن مواصفات مشابهة تواصل معنا.
+        <span id="count-sold" style="color:var(--gold);margin-right:0.5rem;"></span>
+      </p>
+    </div>
+    <div class="cars-grid" id="cars-grid-sold"></div>
+    <div class="pagination" id="pagination-sold"></div>
+  </div>
+
+</section>
+
+
+<!-- ══ SECTION: INQUIRIES ══ -->
+<div class="section-divider"><span>الاستفسارات</span></div>
+
+<section id="section-inquiries">
+  <div class="section-title-wrap">
+    <h2 class="section-title">سيارات مطلوبة</h2>
+    <p class="section-sub">
+      جميع الاستفسارات الواردة من الزوار.
+      <span id="count-inquiries" style="color:var(--gold); margin-right:0.5rem;"></span>
+    </p>
+  </div>
+
+  <div id="inquiries-loading" style="text-align:center; padding:3rem; color:var(--gray); font-size:0.85rem; letter-spacing:0.15em;">
+    جاري التحميل...
+  </div>
+
+  <div id="inquiries-error" style="display:none; text-align:center; padding:3rem; color:#eb5757; font-size:0.85rem;">
+    تعذّر تحميل الاستفسارات، حاول لاحقاً.
+  </div>
+
+  <div id="inquiries-grid" class = "inquiries-grid"></div>
+
+  <div class="pagination" id="pagination-inquiries"></div>
+</section>
+
+<div class="section-divider"><span>تواصل معنا</span></div>
+
+<section id="contact" style="display:flex;  background:var(--black);">
+<div class="contact-section">
+
+  <!-- ── Header ── -->
+  <div class="section-header">
+    <div class="eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">نحن هنا لمساعدتك</span>
+    </div>
+    <h2 class="section-title">تواصل <span>معنا</span></h2>
+    <p class="section-sub">
+      هل لديك استفسار عن سيارة؟ تواصل معنا وسيرد عليك فريقنا في أقرب وقت ممكن.
+    </p>
+  </div>
+
+  <!-- ── Contact Cards ── -->
+  <div class="contact-grid">
+
+    <div class="contact-card">
+      <div class="card-icon">📞</div>
+      <div class="card-body">
+        <div class="card-label">الهاتف</div>
+        <div class="card-value">+963 XXX XXX XXX</div>
+        <div class="card-note">السبت – الخميس، ٩ص – ٧م</div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="card-icon">✉️</div>
+      <div class="card-body">
+        <div class="card-label">البريد الإلكتروني</div>
+        <div class="card-value">info@carcon.com</div>
+        <div class="card-note">نرد خلال ٢٤ ساعة</div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="card-icon">📍</div>
+      <div class="card-body">
+        <div class="card-label">الموقع</div>
+        <div class="card-value">دمشق، سوريا</div>
+        <div class="card-note">المعرض مفتوح يومياً</div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="card-icon">💬</div>
+      <div class="card-body">
+        <div class="card-label">واتساب</div>
+        <div class="card-value">+963 XXX XXX XXX</div>
+        <div class="card-note">تواصل فوري عبر واتساب</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Inquiry CTA ── -->
+  <div class="contact-cta" id = 'inquery'>
+    <div class="cta-text">
+      <strong>أرسل استفساراً الآن</strong>
+      سيصلك الرد عبر واتساب أو البريد الإلكتروني خلال وقت قصير
+    </div>
+    <button class="cta-btn" onclick="openInquiry()">إرسال استفسار</button>
+  </div>
+
+</div>
+</section>
+  <div id="inquiry-overlay" onclick="closeInquiry()" style="
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.75); z-index:1000;
+  backdrop-filter:blur(4px);
+  
+"></div>
+
+<div id="inquiry-modal" style="
+  display:none; position:fixed;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  width:min(560px, 92vw);
+  background:var(--bg-card);
+  border:1px solid rgba(201,168,76,0.2);
+  z-index:1001;
+  padding:2.5rem;
+">
+
+  <div class="inq-header">
+    <span class="inq-title">إرسال استفسار</span>
+    <button class="inq-close" onclick="closeInquiry()">✕</button>
+  </div>
+
+  <div class="inq-row">
+    <div class="inq-field">
+      <label class="inq-label">الاسم *</label>
+      <input id="inq-name" class="inq-input" type="text" placeholder="اسمك الكامل"/>
+      <span class="inq-field-error" id="err-name"></span>
+    </div>
+    <div class="inq-field">
+      <label class="inq-label">رقم الهاتف *</label>
+      <input id="inq-phone" class="inq-input" type="tel" placeholder="+963 XXX XXX"/>
+      <span class="inq-field-error" id="err-phone"></span>
+    </div>
+  </div>
+
+  <div class="inq-field">
+    <label class="inq-label">نوع الاستفسار</label>
+    <select id="inq-type" class="inq-select">
+      <option value="available">سيارة متاحة</option>
+      <option value="unavailable">استفسار عن سيارة غير موجودة</option>
+      <option value="sold">استفسار عن سيارة مباعة</option>
+      <option value="general">استفسار عام</option>
+    </select>
+  </div>
+
+  <div class="inq-field">
+    <label class="inq-label">رسالتك *</label>
+    <textarea id="inq-message" class="inq-textarea" rows="4"
+      placeholder="اكتب استفسارك هنا..."></textarea>
+    <span class="inq-field-error" id="err-message"></span>
+  </div>
+
+  <div class="inq-footer">
+    <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+      <button class="inq-submit" id="inq-submit-btn" onclick="submitInquiry()">إرسال</button>
+      <button class="inq-whatsapp" onclick="sendWhatsapp()">💬 إرسال عبر واتساب</button>
+    </div>
+    <span class="inq-toast" id="inq-toast"></span>
+  </div>
+
+</div>
+
+<script src="{% static 'js/filter.js' %}"></script>
+<script>
+  function toggleMenu() {
+    const panel     = document.getElementById('menuPanel');
+    const hamburger = document.getElementById('hamburger');
+    const overlay   = document.getElementById('overlay');
+    const isOpen    = panel.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    overlay.classList.toggle('active', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  document.querySelectorAll('.menu-link').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('menuPanel').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('overlay').classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+</script>
+
+</body>
+</html>
+
+--.
