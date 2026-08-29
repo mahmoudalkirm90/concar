@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CarCon — سيارات فاخرة</title>
+  
+  <!-- استدعاء الخطوط الفخمة المطلوبة (Alexandria للعربي، و Plus Jakarta Sans للإنجليزي) -->
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;700;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="static/css/index.css">
+  
+  <style>
+    /* ══════════════════════════════════════
+       THEME VARIABLES & CORE (Luxury Black Theme)
+       ══════════════════════════════════════ */
+    :root {
+      --bg: #FAFAFA;            /* الخلفية الفاخرة الجديدة */
+      --bg-card: #FFFFFF;       /* خلفية البطاقات والألواح */
+      --bg-card-2: #F3F3F3;
+      --text: #111111;          /* اللون الأساسي الداكن */
+      --text-muted: #5F5F5F;    /* اللون الثانوي */
+      --border: #E7E7E7;        /* الحدود الناعمة المحددة */
+      --hover: #000000;
+      --accent: #CFCFCF;
+      
+      --red: #eb5757;
+      --green: #6fcf97;
+      --whatsapp-green: #25D366;
+      
+      /* إحلال التدرجات الشفافة لتتوافق مع الهوية الجديدة */
+      --gold: #111111;
+      --gold-light: #5F5F5F;
+      --gold-dim: #A0A0A0;
+      --gold-op-02: rgba(0,0,0,0.02);
+      --gold-op-03: rgba(0,0,0,0.03);
+      --gold-op-04: rgba(0,0,0,0.04);
+      --gold-op-05: rgba(0,0,0,0.05);
+      --gold-op-10: rgba(0,0,0,0.10);
+      --gold-op-12: rgba(0,0,0,0.12);
+      --gold-op-15: rgba(0,0,0,0.15);
+      --gold-op-20: rgba(0,0,0,0.20);
+      --gold-op-25: rgba(0,0,0,0.25);
+      --gold-op-30: rgba(0,0,0,0.30);
+      --gold-op-40: rgba(0,0,0,0.40);
+      --gold-op-45: rgba(0,0,0,0.45);
+      --gold-op-50: rgba(0,0,0,0.50);
+      
+      --white-op-15: rgba(0,0,0,0.08);
+      --white-op-20: rgba(0,0,0,0.12);
+      --white-op-25: rgba(0,0,0,0.15);
+      --white-op-30: rgba(0,0,0,0.20);
+      --white-op-35: rgba(0,0,0,0.25);
+      --white-op-40: rgba(0,0,0,0.30);
+      --white-op-50: rgba(0,0,0,0.40);
+      --white-op-70: rgba(0,0,0,0.60);
+      --white-op-80: rgba(0,0,0,0.75);
+      --white-op-90: rgba(0,0,0,0.85);
+      
+      --black-op-55: rgba(250,250,250,0.55);
+      --black-op-85: rgba(250,250,250,0.85);
+      --black-op-90: rgba(250,250,250,0.90);
+      --black-op-95: rgba(250,250,250,0.95);
+      
+      --border-subtle: #E7E7E7;
+      --border-light: #EEEEEE;
+      --border-medium: #DDDDDD;
+      --border-strong: #E7E7E7;
+      --surface-subtle: #FFFFFF;
+      --surface-light: #F9F9F9;
+      --surface-overlay: rgba(0,0,0,0.05);
+      --surface-overlay-20: rgba(0,0,0,0.10);
+      --shadow: rgba(0, 0, 0, 0.03);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Alexandria', 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* تأثير الـ Noise السينمائي الخفيف جداً المذكور في المتطلبات */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.015;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Scroll Progress Bar العلوي */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--text);
+      transform-origin: right;
+      transform: scaleX(0);
+      z-index: 1000;
+      transition: transform 0.1s linear;
+    }
+
+    /* تأثير ظهور الـ Sections عند التحميل والوصول */
+    section, .stats-bar, .section-divider {
+      animation: sectionFadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes sectionFadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── الفواصل الأنيقة الجديدة ── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 0 10%;
+      margin: 4rem 0;
+    }
+    .section-divider::before, .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-divider span {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ══════════════════════════════════════
+       HEADER & NAVBAR (Glassmorphism + Apple Pill Hover)
+       ══════════════════════════════════════ */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      background: rgba(255, 255, 255, 0.7); /* شفاف بالكامل ليتغير عند النزول */
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-bottom: 1px solid var(--border);
+      height: 90px;
+      transition: all 0.4s ease;
+    }
+    
+    /* اللوجو في اليسار والقائمة في المنتصف */
+    .logo {
+      order: 1;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .logo .image {
+      width: 65px;
+      height: auto;
+      display: flex;
+      align-items: center;
+    }
+    .logo .image img {
+      max-width: 100%;
+      height: auto;
+      filter: brightness(0.1);
+    }
+
+    nav {
+      order: 2;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px; /* تحويل الهوفر إلى كبسولة خلفية مثل Apple */
+      transition: all 0.35s ease;
+    }
+    nav a:hover {
+      color: var(--hover);
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    /* زر Browse Cars في اليمين كـ CTA */
+    .nav-cta {
+      order: 3;
+      background: var(--text) !important;
+      color: #FFFFFF !important;
+      border: none;
+      padding: 0.7rem 1.6rem !important;
+      font-size: 0.8rem !important;
+      font-weight: 600;
+      border-radius: 40px !important;
+      transition: all 0.3s ease !important;
+    }
+    .nav-cta:hover {
+      background: var(--hover) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* ══════════════════════════════════════
+       HERO SECTION (Floating Specs + Typography)
+       ══════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      padding: 120px 5% 60px;
+      gap: 4rem;
+      position: relative;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 50%, #FFFFFF 100%);
+      overflow: hidden;
+    }
+
+    /* Huge Typography الخلفي العملاق خلف السيارة */
+    .hero::after {
+      content: 'LUXURY';
+      position: absolute;
+      bottom: 5%;
+      left: 5%;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 230px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      opacity: 0.025;
+      line-height: 0.8;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 30px; height: 2px;
+      background: var(--text);
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 4.5vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin-bottom: 3rem;
+    }
+    .hero-btns { display: flex; gap: 1.2rem; }
+    
+    .btn-primary, .btn-secondary {
+      padding: 1rem 2.2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-primary {
+      background: var(--text);
+      color: #FFFFFF;
+      border: 1px solid var(--text);
+    }
+    .btn-primary:hover {
+      background: var(--hover);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--text);
+      background: rgba(0,0,0,0.02);
+      transform: translateY(-3px);
+    }
+
+    /* Floating Image & Specs Container */
+    .hero-image {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 35px rgba(0,0,0,0.12)); /* Floating Shadow الخفيف المذكور */
+      animation: carEntrance 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes carEntrance {
+      from { opacity: 0; transform: translateX(-60px); } /* دخول انسيابي من اليمين (حسب اتجاه الـ RTL) */
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ══════════════════════════════════════
+       STATS BAR (3 Circular Cards)
+       ══════════════════════════════════════ */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      padding: 4rem 5%;
+      background: transparent;
+    }
+    .stat-item {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%; /* تحويلها لبطاقات دائرية Circular Cards */
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 1px solid var(--border); /* إلغاء التنسيق القديم */
+    }
+    .stat-item:hover {
+      transform: scale(1.08); /* تكبر قليلاً عند التمرير */
+      box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+      border-color: var(--text);
+    }
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════════════
+       CATALOG & STICKY FILTERS (Porsche Style)
+       ══════════════════════════════════════ */
+    #catalog { padding: 2rem 0; }
+    
+    .section-title-wrap {
+      padding: 2rem 5% 1rem;
+      text-align: center;
+    }
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+    .section-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* الفلاتر الملتصقة Sticky وبشكل خط أفقي متكامل */
+    .filters-bar {
+      position: sticky;
+      top: 90px;
+      z-index: 800;
+      background: rgba(250, 250, 250, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      padding: 1.5rem 5%;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+    .filter-group { flex: 1; min-width: 140px; }
+    .search-group { flex: 2; min-width: 240px; }
+
+    .filter-input, .filter-select {
+      height: 52px;
+      border-radius: 14px; /* زوايا دائرية 14px */
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0 1.2rem;
+      outline: none;
+      transition: all 0.25s ease;
+      width: 100%;
+    }
+    .filter-input:focus, .filter-select:focus {
+      border-color: var(--text);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.03);
+    }
+    .filter-select {
+      appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%235F5F5F' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: left 1.2rem center;
+      padding-left: 2.5rem;
+    }
+
+    .price-group, .year-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 260px;
+    }
+    .range-sep { color: var(--text-muted); font-size: 0.9rem; }
+
+    .btn-reset {
+      height: 52px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0 1.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .btn-reset:hover {
+      border-color: var(--text);
+      color: var(--text);
+      background: rgba(0,0,0,0.02);
+    }
+
+    /* ══════════════════════════════════════
+       CAR CARDS (Porsche Inventory Grid Style)
+       ══════════════════════════════════════ */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      padding: 3rem 5%;
+    }
+    
+    .car-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02); /* التخلي عن الظل القديم المتكرر والاعتماد على السلس */
+    }
+    /* تأثير الـ Hover المتطور المذكور */
+    .car-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .car-img-wrap {
+      width: 100%;
+      height: 220px; /* تشغل نسبة مثالية تقارب 65% من الارتفاع البصري العلوي */
+      overflow: hidden;
+      background: #F9F9F9;
+      position: relative;
+    }
+    .car-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .car-card:hover .car-img {
+      transform: scale(1.06); /* زووم خفيف للصورة عند التمرير */
+    }
+
+    /* التدرج اللوني أسفل الصورة لراحة العين وفخامة الكارد */
+    .car-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 40px;
+      background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+      pointer-events: none;
+    }
+
+    /* Badges Pill المحدثة بالكامل */
+    .card-badge, .ribbon-sold {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      z-index: 10;
+      text-transform: uppercase;
+    }
+    .card-badge.badge-new { background: var(--text); color: #FFFFFF; }
+    .card-badge.badge-other { background: #FFFFFF; border: 1px solid var(--border); color: var(--text); }
+    
+    /* تفاصيل محتوى الكارد السفلي */
+    .car-card .card-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .car-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .car-meta {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .car-specs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.2rem;
+    }
+    .spec-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
+    }
+    .spec-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .spec-value.price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* تخصيص قسم السيارات المباعة (Grayscale & Opacity) */
+    #section-sold .car-card {
+      filter: grayscale(1);
+      opacity: 0.75;
+    }
+    #section-sold .car-card:hover {
+      filter: grayscale(0.4);
+      opacity: 0.95;
+    }
+    .ribbon-sold {
+      background: var(--red) !important;
+      color: #FFFFFF !important;
+      transform: none !important;
+    }
+
+    /* ══════════════════════════════════════
+       INQUIRIES SECTION (Timeline / CRM Bubble Style)
+       ══════════════════════════════════════ */
+    #section-inquiries {
+      padding: 4rem 5%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .inquiries-grid {
+      display: flex !important; /* تحويلها إلى التايم لاين الرأسي الفاخر المذكور */
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      padding-right: 2rem;
+      background: transparent !important;
+    }
+    /* خط التايم لاين الجانبي */
+    .inquiries-grid::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; right: 7px;
+      width: 2px;
+      background: var(--border);
+    }
+    
+    .inquiry-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+    }
+    /* نقطة التايم لاين المحاذية لكل ببل */
+    .inquiry-card::before {
+      content: '';
+      position: absolute;
+      top: 24px; right: -29px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 3px solid var(--text);
+      z-index: 2;
+    }
+
+    /* ══════════════════════════════════════
+       CONTACT SECTION (Split Left/Right UI)
+       ══════════════════════════════════════ */
+    #contact {
+      padding: 5rem 5%;
+      background: #FFFFFF !important;
+    }
+    .contact-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr; /* تقسيم القسم يمين ويسار بالكامل */
+      gap: 4rem;
+      padding: 0;
+    }
+    .contact-section::before { display: none; } /* حذف الجريد الخلفي القديم المزدحم */
+
+    .contact-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      background: transparent;
+      border: none;
+    }
+    .contact-card {
+      background: #F9F9F9;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .contact-card:hover { background: #F3F3F3; }
+
+    /* الجزء الأيمن المحجوز للخريطة التفاعلية الفاخرة وتفاصيل الـ CTA */
+    .contact-right-pane {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .map-placeholder {
+      height: 320px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: #F5F5F5;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .contact-cta {
+      margin-top: 0;
+      background: var(--text);
+      border-radius: 20px;
+      padding: 2rem;
+      border: none;
+    }
+    .contact-cta .cta-text strong { color: #FFFFFF; }
+    .contact-cta .cta-text { color: rgba(255,255,255,0.7); }
+    .contact-cta .cta-btn {
+      background: #FFFFFF;
+      color: var(--text);
+      border-radius: 30px;
+    }
+
+    /* ══════════════════════════════════════
+       INQUIRY MODAL & OVERLAY
+       ══════════════════════════════════════ */
+    #inquiry-modal {
+      border-radius: 24px !important;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15) !important;
+      border: 1px solid var(--border) !important;
+      background: #FFFFFF !important;
+    }
+    .inq-input, .inq-textarea, .inq-select {
+      border-radius: 12px;
+      background: #F9F9F9;
+    }
+    .inq-submit {
+      border-radius: 30px;
+    }
+
+    /* ══════════════════════════════════════
+       PAGINATION BUTTONS
+       ══════════════════════════════════════ */
+    .page-btn {
+      border-radius: 50%;
+      width: 42px; height: 42px;
+      font-weight: 600;
+    }
+    .page-btn.active {
+      background: var(--text);
+      border-color: var(--text);
+    }
+
+    /* ══════════════════════════════════════
+       FOOTER ADDITION (تلبية لتوصية إضافة فوتر كامل مفقود)
+       ══════════════════════════════════════ */
+    footer {
+      background: #FFFFFF;
+      border-top: 1px solid var(--border);
+      padding: 4rem 5% 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+    }
+    .footer-col h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.8rem; }
+    .footer-col ul li a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.25s ease;
+    }
+    .footer-col ul li a:hover { color: var(--text); }
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE MEDIA QUERIES
+       ══════════════════════════════════════ */
+    @media (max-width: 992px) {
+      .hero { grid-template-columns: 1fr; text-align: center; padding-top: 140px; }
+      .hero-eyebrow { justify-content: center; }
+      .hero p { margin: 0 auto 2rem; }
+      .hero-btns { justify-content: center; }
+      .contact-section { grid-template-columns: 1fr; }
+      .stats-bar { gap: 1.5rem; flex-wrap: wrap; }
+    }
+    @media (max-width: 640px) {
+      header { padding: 0 1.5rem; }
+      nav { display: none; }
+      .filters-bar { top: 80px; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Scroll Progress Bar العلوي الاستكشافي -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <a href="#" class="logo">
+    <div class="image">
+      <img src="../media/logo.png" alt="CarCon">
+    </div>
+  </a>
+  <nav id="nav">
+    <a href="#">الرئيسية</a>
+    <a href="#section-available">المتاح</a>
+    <a href="#section-sold">المباع</a>
+    <a href="#contact">تواصل معنا</a>
+    <a href="#inquery" class="nav-cta">إرسال استفسار</a>
+  </nav>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-links">
+    <a class="menu-link" href="#"><span>الرئيسية</span><span class="arrow">←</span></a>
+    <a class="menu-link" href="#section-available"><span>المتاح</span><span class="arrow">←</span></a>
+    <a class="menu-link" href="#section-sold"><span>المباع</span><span class="arrow">←</span></a>
+    <a class="menu-link" href="#contact"><span>تواصل معنا</span><span class="arrow">←</span></a>
+    <a class="menu-link" href="#inquery"><span>إرسال استفسار</span><span class="arrow">←</span></a>
+  </div>
+  <div class="menu-footer">
+    <div class="menu-footer-label">هل أنت مستعد للعثور على سيارتك؟</div>
+    <button class="menu-footer-btn" href="#section-available">تصفح السيارات</button>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">وكالة سيارات فاخرة</div>
+    <h1>أرقى <em>السيارات</em><br/>في مكان واحد</h1>
+    <p>
+      نقدم لك تجربة تسوق استثنائية لأفضل السيارات الفاخرة،
+      مع ضمان الجودة والخدمة المتميزة لكل عميل.
+    </p>
+    <div class="hero-btns">
+      <a href="#section-available" class="btn-primary">تصفح السيارات</a>
+      <a href="#contact" class="btn-secondary">تواصل معنا</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="media/hero.png" alt="سيارة فاخرة" />
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">١٥+</div>
+    <div class="stat-label">سنة خبرة</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">٥٠٠+</div>
+    <div class="stat-label">عميل راضٍ</div>
+  </div>
+  <div class="stat-item no-border">
+    <div class="stat-num">٣٠+</div>
+    <div class="stat-label">ماركة عالمية</div>
+  </div>
+</div>
+
+<!-- ══ CATALOG ══ -->
+<section id="catalog">
+
+  <!-- FILTERS (Sticky Bar) -->
+  <div class="filters-bar">
+    <div class="filter-group search-group">
+      <input id="search-input" class="filter-input" type="text" placeholder="🔍  ابحث عن سيارة..."/>
+    </div>
+    <div class="filter-group">
+      <select id="filter-brand" class="filter-select">
+        <option value="">🚘  كل الماركات</option>
+      </select>
+    </div>
+    <div class="filter-group price-group">
+      <input id="filter-min-price" class="filter-input" type="number" placeholder="💰 السعر من" min="0"/>
+      <span class="range-sep">—</span>
+      <input id="filter-max-price" class="filter-input" type="number" placeholder="إلى" min="0"/>
+    </div>
+    <div class="filter-group year-group">
+      <input id="filter-min-year" class="filter-input" type="number" placeholder="📅 سنة من" min="2000" max="2025"/>
+      <span class="range-sep">—</span>
+      <input id="filter-max-year" class="filter-input" type="number" placeholder="إلى" min="2000" max="2025"/>
+    </div>
+    <div class="filter-group">
+      <select id="filter-fuel" class="filter-select">
+        <option value="">⛽  نوع الوقود</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <select id="filter-transmission" class="filter-select">
+        <option value="">⚙️  ناقل الحركة</option>
+        <option value="automatic">أوتوماتيك</option>
+        <option value="manual">يدوي</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <select id="filter-sort" class="filter-select">
+        <option value="-created_at">الأحدث أولاً</option>
+        <option value="price">السعر: الأقل أولاً</option>
+        <option value="-price">السعر: الأعلى أولاً</option>
+      </select>
+    </div>
+    <button id="btn-reset" class="btn-reset">✕ مسح</button>
+  </div>
+
+  <!-- ══ SECTION: AVAILABLE ══ -->
+  <div id="section-available">
+    <div class="section-title-wrap">
+      <h2 class="section-title">متاح الآن</h2>
+      <p class="section-sub">
+        سيارات مختارة بعناية جاهزة لأصحابها الجدد.
+        <span id="count-available" style="color:var(--text); margin-right:0.5rem; font-weight:700;"></span>
+      </p>
+    </div>
+    <div class="cars-grid" id="cars-grid-available"></div>
+    <div class="pagination" id="pagination-available"></div>
+  </div>
+
+  <!-- ── فاصل ── -->
+  <div class="section-divider">
+    <span>السيارات المباعة</span>
+  </div>
+
+  <!-- ══ SECTION: SOLD ══ -->
+  <div id="section-sold">
+    <div class="section-title-wrap">
+      <h2 class="section-title">مباعة</h2>
+      <p class="section-sub">
+        سيارات تم بيعها — للاستفسار عن مواصفات مشابهة تواصل معنا.
+        <span id="count-sold" style="color:var(--text); margin-right:0.5rem; font-weight:700;"></span>
+      </p>
+    </div>
+    <div class="cars-grid" id="cars-grid-sold"></div>
+    <div class="pagination" id="pagination-sold"></div>
+  </div>
+
+</section>
+
+<!-- ══ SECTION: INQUIRIES ══ -->
+<div class="section-divider"><span>الاستفسارات</span></div>
+
+<section id="section-inquiries">
+  <div class="section-title-wrap">
+    <h2 class="section-title">سيارات مطلوبة</h2>
+    <p class="section-sub">
+      جميع الاستفسارات الواردة من الزوار عبر النظام.
+      <span id="count-inquiries" style="color:var(--text); margin-right:0.5rem; font-weight:700;"></span>
+    </p>
+  </div>
+
+  <div id="inquiries-loading" style="text-align:center; padding:3rem; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em;">
+    جاري التحميل...
+  </div>
+
+  <div id="inquiries-error" style="display:none; text-align:center; padding:3rem; color:#eb5757; font-size:0.85rem;">
+    تعذّر تحميل الاستفسارات، حاول لاحقاً.
+  </div>
+
+  <div id="inquiries-grid" class="inquiries-grid"></div>
+
+  <div class="pagination" id="pagination-inquiries"></div>
+</section>
+
+<div class="section-divider"><span>تواصل معنا</span></div>
+
+<!-- ══ SECTION: CONTACT (Split Left/Right View) ══ -->
+<section id="contact">
+  <div class="contact-section">
+    
+    <!-- Left Pane: Info Cards -->
+    <div class="contact-left-pane">
+      <div class="section-header">
+        <div class="eyebrow">
+          <div class="eyebrow-line"></div>
+          <span class="eyebrow-text">نحن هنا لمساعدتك</span>
+        </div>
+        <h2 class="section-title">تواصل <span>معنا</span></h2>
+        <p class="section-sub">
+          هل لديك استفسار عن سيارة؟ تواصل معنا وسيرد عليك فريقنا في أقرب وقت ممكن.
+        </p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="card-body">
+            <div class="card-label">📞 الهاتف</div>
+            <div class="card-value">+963 XXX XXX XXX</div>
+            <div class="card-note">السبت – الخميس، ٩ص – ٧م</div>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="card-body">
+            <div class="card-label">✉️ البريد الإلكتروني</div>
+            <div class="card-value">info@carcon.com</div>
+            <div class="card-note">نرد خلال ٢٤ ساعة</div>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="card-body">
+            <div class="card-label">📍 الموقع</div>
+            <div class="card-value">دمشق، سوريا</div>
+            <div class="card-note">المعرض مفتوح يومياً</div>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="card-body">
+            <div class="card-label">💬 واتساب</div>
+            <div class="card-value">+963 XXX XXX XXX</div>
+            <div class="card-note">تواصل فوري عبر واتساب</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Pane: Interactive Map & CTA -->
+    <div class="contact-right-pane">
+      <div class="map-placeholder">
+        <!-- الخريطة التفاعلية الفاخرة المدمجة بالقسم الأيمن -->
+        <div class="map-pin" style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%);"></div>
+        <button class="map-open-btn">عرض الخريطة بالكامل</button>
+      </div>
+
+      <div class="contact-cta" id='inquery'>
+        <div class="cta-text">
+          <strong>أرسل استفساراً الآن</strong>
+          سيصلك الرد عبر واتساب أو البريد الإلكتروني خلال وقت قصير
+        </div>
+        <button class="cta-btn" onclick="openInquiry()">إرسال استفسار</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ FOOTER (القسم الجديد المقترح للوصول بالموقع لأعلى مستويات الاحترافية) ══ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4 style="font-family:'Plus Jakarta Sans'; font-weight:900;">CARCON</h4>
+      <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;">بوابتك المفضلة لامتلاك واكتشاف السيارات الفاخرة والنادرة بدمشق، مع خدمات جودة شاملة وموثوقة.</p>
+    </div>
+    <div class="footer-col">
+      <h4>روابط سريعة</h4>
+      <ul>
+        <li><a href="#">الرئيسية</a></li>
+        <li><a href="#catalog">المعروضات الكلية</a></li>
+        <li><a href="#section-inquiries">الاستفسارات الحالية</a></li>
+        <li><a href="#contact">قنوات التواصل</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>الماركات الفاخرة</h4>
+      <ul>
+        <li><a href="#">Porsche</a></li>
+        <li><a href="#">Mercedes-Benz</a></li>
+        <li><a href="#">BMW M Series</a></li>
+        <li><a href="#">Audi RS</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© ٢٠٢٦ CarCon للسيارات الفاخرة. جميع الحقوق محفوظة.</p>
+  </div>
+</footer>
+
+<!-- ══ MODAL INTERFACE ══ -->
+<div id="inquiry-overlay" onclick="closeInquiry()" style="
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.4); z-index:1000;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+"></div>
+
+<div id="inquiry-modal" style="
+  display:none; position:fixed;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  width:min(560px, 92vw);
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  z-index:1001;
+  padding:2.5rem;
+">
+  <div class="inq-header">
+    <span class="inq-title">إرسال استفسار</span>
+    <button class="inq-close" onclick="closeInquiry()">✕</button>
+  </div>
+
+  <div class="inq-row">
+    <div class="inq-field">
+      <label class="inq-label">الاسم *</label>
+      <input id="inq-name" class="inq-input" type="text" placeholder="اسمك الكامل"/>
+      <span class="inq-field-error" id="err-name"></span>
+    </div>
+    <div class="inq-field">
+      <label class="inq-label">رقم الهاتف *</label>
+      <input id="inq-phone" class="inq-input" type="tel" placeholder="+963 XXX XXX"/>
+      <span class="inq-field-error" id="err-phone"></span>
+    </div>
+  </div>
+
+  <div class="inq-field">
+    <label class="inq-label">نوع الاستفسار</label>
+    <select id="inq-type" class="inq-select">
+      <option value="available">سيارة متاحة</option>
+      <option value="unavailable">استفسار عن سيارة غير موجودة</option>
+      <option value="sold">استفسار عن سيارة مباعة</option>
+      <option value="general">استفسار عام</option>
+    </select>
+  </div>
+
+  <div class="inq-field">
+    <label class="inq-label">رسالتك *</label>
+    <textarea id="inq-message" class="inq-textarea" rows="4" placeholder="اكتب استفسارك هنا..."></textarea>
+    <span class="inq-field-error" id="err-message"></span>
+  </div>
+
+  <div class="inq-footer">
+    <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+      <button class="inq-submit" id="inq-submit-btn" onclick="submitInquiry()">إرسال</button>
+      <button class="inq-whatsapp" onclick="sendWhatsapp()">💬 إرسال عبر واتساب</button>
+    </div>
+    <span class="inq-toast" id="inq-toast"></span>
+  </div>
+</div>
+
+<script src="{% static 'js/filter.js' %}"></script>
+<script>
+  // تفعيل ديناميكية نافبار Glassmorphism المتقدمة عند التمرير
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    const scrollProgress = document.getElementById('scrollProgress');
+    
+    // تأثير خط مؤشر القراءة المتجاوب بالنزول
+    const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (totalScroll > 0) {
+      const scrolled = (window.scrollY / totalScroll);
+      scrollProgress.style.transform = `scaleX(${scrolled})`;
+    }
+    
+    if (window.scrollY > 40) {
+      header.style.background = 'rgba(255, 255, 255, 0.85)';
+      header.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.03)';
+      header.style.height = '80px';
+    } else {
+      header.style.background = 'rgba(255, 255, 255, 0.7)';
+      header.style.boxShadow = 'none';
+      header.style.height = '90px';
+    }
+  });
+
+  function toggleMenu() {
+    const panel     = document.getElementById('menuPanel');
+    const hamburger = document.getElementById('hamburger');
+    const overlay   = document.getElementById('overlay');
+    const isOpen    = panel.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    overlay.classList.toggle('active', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  document.querySelectorAll('.menu-link').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('menuPanel').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('overlay').classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+</script>
+
+</body>
+</html>
